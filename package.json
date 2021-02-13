@@ -1,0 +1,11 @@
+{
+  "name": "leaflet.tilelayer.wmts",
+  "version": "1.0.0",
+  "description": "Leaflet WMTS tilelayer plugin with typings",
+  "main": "leaflet.tilelayer.wmts.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Alexandru Calin",
+  "license": "BSD-2-Clause"
+}
