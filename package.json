@@ -2,10 +2,15 @@
   "name": "leaflet.tilelayer.wmts",
   "version": "1.0.0",
   "description": "Leaflet WMTS tilelayer plugin with typings",
-  "main": "leaflet.tilelayer.wmts.js",
+  "main": "leaflet.tilelayer.wmts.src.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "npm run uglify",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "uglify": "uglifyjs --mangle --compress --verbose --warn leaflet.tilelayer.wmts.js --output leaflet.tilelayer.wmts.min.js"
   },
   "author": "Alexandru Calin",
-  "license": "BSD-2-Clause"
+  "license": "Beerware",
+  "devDependencies": {
+    "uglify-js": "^3.12.8"
+  }
 }

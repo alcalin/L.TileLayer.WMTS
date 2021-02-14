@@ -1,5 +1,6 @@
-/* eslint-disable no-underscore-dangle */
-
+(function () {
+  'use strict';
+  
 L.TileLayer.WMTS = L.TileLayer.extend({
   defaultWmtsParams: {
     service: "WMTS",
@@ -38,9 +39,7 @@ L.TileLayer.WMTS = L.TileLayer.extend({
 
     const params = { ...this.wmtsParams, tileRow: coords.y, tileCol: coords.x };
 
-    const tileUrl = url + L.Util.getParamString(params);
-
-    return tileUrl;
+    return  url + L.Util.getParamString(params);
   },
   setParams: function (params, noRedraw) {
     L.extend(this.wmtsParams, params);
@@ -53,3 +52,5 @@ L.TileLayer.WMTS = L.TileLayer.extend({
 L.tileLayer.wmts = function (url, options) {
   return new L.TileLayer.WMTS(url, options);
 };
+
+}());
