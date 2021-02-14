@@ -49,6 +49,7 @@ L.TileLayer.WMTS = L.TileLayer.extend({
     return this;
   },
 });
+
 L.tileLayer.wmts = function (url, options) {
   return new L.TileLayer.WMTS(url, options);
 };

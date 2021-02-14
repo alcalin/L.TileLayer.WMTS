@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+        <style type="text/css">
+            #map {
+                position: absolute;
+                left: 0;
+                right: 0;
+                top: 0;
+                bottom: 0;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="map"></div>
+         <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet-src.min.js"></script>
+          <script src="leaflet.tilelayer.wmts.min.js"></script>
+          <script type="text/javascript">
+            (function() {
+                'use strict';
+
+                let map = L.map('map').setView([65.5, 17.0], 4);
+
+                let url = 'http://e.s2maps-tiles.eu/wmts';
+                
+                let options = {
+                    tileMatrixSet:'g',
+                    layer:'bluemarble_3857',
+                };
+
+                let wmtsLayer = L.tileLayer.wmts(url, options);
+
+                let baseLayers = {};
+                baseLayers['Blue Marble World'] = wmtsLayer;
+                
+                wmtsLayer.addTo(map);
+                L.control.layers(baseLayers).addTo(map);
+            }());
+          </script>
+    </body>
+</html>
