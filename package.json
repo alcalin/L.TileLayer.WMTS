@@ -1,16 +1,54 @@
 {
-  "name": "leaflet.tilelayer.wmts",
-  "version": "1.0.0",
-  "description": "Leaflet WMTS tilelayer plugin with typings",
-  "main": "leaflet.tilelayer.wmts.src.js",
-  "scripts": {
-    "build": "npm run uglify",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "uglify": "uglifyjs --mangle --compress --verbose --warn leaflet.tilelayer.wmts.js --output leaflet.tilelayer.wmts.min.js"
+  "name": "l.tilelayer.wmts",
+  "version": "2.0.0",
+  "description": "A modern, lightweight Leaflet plugin for displaying WMTS tile layers.",
+  "type": "module",
+  "main": "./leaflet.tilelayer.wmts.js",
+  "module": "./leaflet.tilelayer.wmts.js",
+  "types": "./leaflet.tilelayer.wmts.d.ts",
+  "exports": {
+    ".": {
+      "import": "./leaflet.tilelayer.wmts.js",
+      "require": "./leaflet.tilelayer.wmts.js",
+      "types": "./leaflet.tilelayer.wmts.d.ts"
+    }
   },
+  "files": [
+    "dist",
+    "leaflet.tilelayer.wmts.js",
+    "leaflet.tilelayer.wmts.d.ts",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "rollup -c && terser dist/leaflet.tilelayer.wmts.umd.js -o dist/leaflet.tilelayer.wmts.min.js --compress --mangle",
+    "prepublishOnly": "npm run build",
+    "test": "echo \"No tests yet\" && exit 0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alcalin/L.TileLayer.WMTS.git"
+  },
+  "keywords": [
+    "leaflet",
+    "wmts",
+    "tilelayer",
+    "gis",
+    "maps"
+  ],
   "author": "Alexandru Calin",
   "license": "Beerware",
+  "bugs": {
+    "url": "https://github.com/alcalin/L.TileLayer.WMTS/issues"
+  },
+  "homepage": "https://github.com/alcalin/L.TileLayer.WMTS#readme",
+  "peerDependencies": {
+    "leaflet": "^1.0.0"
+  },
   "devDependencies": {
-    "uglify-js": "^3.12.8"
+    "leaflet": "^1.9.4",
+    "rollup": "^4.21.0",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "terser": "^5.44.0"
   }
 }
