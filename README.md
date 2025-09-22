@@ -1,5 +1,11 @@
 # L.TileLayer.WMTS
 
+[![npm version](https://img.shields.io/npm/v/@alcalin/leaflet-tilelayer-wmts.svg?style=flat-square)](https://www.npmjs.com/package/@alcalin/leaflet-tilelayer-wmts)
+[![npm downloads](https://img.shields.io/npm/dm/@alcalin/leaflet-tilelayer-wmts.svg?style=flat-square)](https://www.npmjs.com/package/@alcalin/leaflet-tilelayer-wmts)
+[![bundle size](https://img.shields.io/bundlephobia/min/@alcalin/leaflet-tilelayer-wmts?style=flat-square)](https://bundlephobia.com/result?p=@alcalin/leaflet-tilelayer-wmts)
+[![License](https://img.shields.io/badge/license-Beerware-blue.svg?style=flat-square)](LICENSE)
+[![Demo](https://img.shields.io/badge/demo-GitHub%20Pages-brightgreen?style=flat-square)](https://alcalin.github.io/L.TileLayer.WMTS/example.html)
+
 A modern, lightweight **Leaflet WMTS TileLayer** plugin.
 
 - ✅ Spec-compliant WMTS KVP (`SERVICE`, `REQUEST`, `VERSION`, …)
@@ -13,7 +19,7 @@ A modern, lightweight **Leaflet WMTS TileLayer** plugin.
 ## Install (npm)
 
 ```bash
-npm i l.tilelayer.wmts leaflet
+npm i @alcalin/leaflet-tilelayer-wmts leaflet
 ```
 
 > Peer dep: you must also install `leaflet` in your app.
@@ -22,7 +28,7 @@ npm i l.tilelayer.wmts leaflet
 
 ```js
 import * as L from "leaflet";
-import { wmts } from "l.tilelayer.wmts";
+import { wmts } from "@alcalin/leaflet-tilelayer-wmts";
 
 const map = L.map("map").setView([40.7128, -74.0060], 5);
 
