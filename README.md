@@ -84,8 +84,6 @@ A prebuilt UMD bundle is available under `dist/`.
 </html>
 ```
 
-On GitHub Pages, the demo will use the UMD build.
-
 ---
 
 ## Options
@@ -115,8 +113,7 @@ On GitHub Pages, the demo will use the UMD build.
 /dist
   leaflet.tilelayer.wmts.umd.js  # UMD build (Rollup output)
   leaflet.tilelayer.wmts.min.js  # Minified UMD build (for browser/demo)
-/demo
-  index.html                     # GitHub Pages demo (loads dist build)
+example.html                     # GitHub Pages demo (loads dist build)
 ```
 
 ---
@@ -125,9 +122,6 @@ On GitHub Pages, the demo will use the UMD build.
 
 - **`Failed to resolve module specifier "leaflet"`**  
   Use this package in a bundler-based app (npm install). For browser demos, include the UMD build under `dist/`.
-
-- **CORS errors in demos**  
-  Serve your HTML via `http://localhost` (e.g., `npx http-server`) rather than `file://`.
 
 ---
 
