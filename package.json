@@ -3,20 +3,19 @@
   "version": "2.0.0",
   "description": "A modern, lightweight Leaflet plugin for displaying WMTS tile layers.",
   "type": "module",
-  "main": "./leaflet.tilelayer.wmts.js",
-  "module": "./leaflet.tilelayer.wmts.js",
-  "types": "./leaflet.tilelayer.wmts.d.ts",
+   "main": "./src/leaflet.tilelayer.wmts.js",
+  "module": "./src/leaflet.tilelayer.wmts.js",
+  "types": "./src/leaflet.tilelayer.wmts.d.ts",
   "exports": {
-    ".": {
-      "import": "./leaflet.tilelayer.wmts.js",
-      "require": "./leaflet.tilelayer.wmts.js",
-      "types": "./leaflet.tilelayer.wmts.d.ts"
+".": {
+      "import": "./src/leaflet.tilelayer.wmts.js",
+      "require": "./src/leaflet.tilelayer.wmts.js",
+      "types": "./src/leaflet.tilelayer.wmts.d.ts"
     }
   },
   "files": [
     "dist",
-    "leaflet.tilelayer.wmts.js",
-    "leaflet.tilelayer.wmts.d.ts",
+    "src",
     "README.md",
     "LICENSE"
   ],
