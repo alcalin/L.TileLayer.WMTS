@@ -1,13 +1,13 @@
 {
   "name": "@alcalin/leaflet-tilelayer-wmts",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "A modern, lightweight Leaflet plugin for displaying WMTS tile layers.",
   "type": "module",
-   "main": "./src/leaflet.tilelayer.wmts.js",
+  "main": "./src/leaflet.tilelayer.wmts.js",
   "module": "./src/leaflet.tilelayer.wmts.js",
   "types": "./src/leaflet.tilelayer.wmts.d.ts",
   "exports": {
-".": {
+    ".": {
       "import": "./src/leaflet.tilelayer.wmts.js",
       "require": "./src/leaflet.tilelayer.wmts.js",
       "types": "./src/leaflet.tilelayer.wmts.d.ts"
