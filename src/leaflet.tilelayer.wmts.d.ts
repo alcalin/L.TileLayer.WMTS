@@ -3,46 +3,30 @@
 // Project: Leaflet WMTS TileLayer
 // Minimum TypeScript Version: 4.4
 
-import * as L from "leaflet";
+declare module '@alcalin/leaflet-tilelayer-wmts' {
+  import * as L from 'leaflet';
 
-import * as L from "leaflet";
+  export interface WMTSOptions extends L.TileLayerOptions {
+    layer: string;
+    tileMatrixSet: string;
+    style?: string;
+    format?: string;                        // used in KVP; REST URLs carry the extension
+    time?: string;                          // e.g., '2004-01-01' for GIBS
+    requestEncoding?: 'REST' | 'KVP' | 'RESTful';
+    tileMatrixLabels?: Array<string | number>;
+    googleMapsCompatible?: boolean;
+    extraParams?: Record<string, string | number | boolean>;
+    baseQuery?: string;
+    crossOrigin?: boolean | '' | 'anonymous' | 'use-credentials';
+  }
 
-/**
- * Options for WMTS layers, extending standard Leaflet TileLayerOptions.
- */
-export interface WMTSOptions extends L.TileLayerOptions {
-  /** WMTS layer name */
-  layer: string;
-  /** WMTS matrix set identifier */
-  tileMatrixSet: string;
-  /** WMTS style (default: "default") */
-  style?: string;
-  /** Tile MIME type (default: "image/png") */
-  format?: string;
-  /** Explicit mapping of Leaflet zoom levels to WMTS TILEMATRIX identifiers */
-  tileMatrixLabels?: (string | number)[];
-  /** If true, assume GoogleMapsCompatible (WebMercator XYZ) grid */
-  googleMapsCompatible?: boolean;
-  /** Additional query parameters (e.g., token) */
-  extraParams?: Record<string, any>;
-  /** Custom query string appended before WMTS KVPs */
-  baseQuery?: string;
-  /**
-   * Cross-origin setting for tile requests.
-   * Matches Leaflet's definition: boolean | "anonymous" | "use-credentials"
-   */
-  crossOrigin?: boolean | L.CrossOrigin;
+  export class WMTS extends L.TileLayer {
+    constructor(url: string, options: WMTSOptions);
+    setParams(
+      params: Partial<WMTSOptions & { extraParams: Record<string, string | number | boolean> }>,
+      noRedraw?: boolean
+    ): this;
+  }
+
+  export function wmts(url: string, options: WMTSOptions): WMTS;
 }
-
-/**
- * WMTS TileLayer class.
- */
-export class WMTS extends L.TileLayer {
-  constructor(url: string, options: WMTSOptions);
-  setParams(params: Record<string, any>, noRedraw?: boolean): this;
-}
-
-/**
- * Factory function for WMTS layers.
- */
-export function wmts(url: string, options: WMTSOptions): WMTS;
