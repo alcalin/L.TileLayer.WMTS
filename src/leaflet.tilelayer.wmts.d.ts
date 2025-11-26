@@ -15,6 +15,7 @@ declare module '@alcalin/leaflet-tilelayer-wmts' {
     requestEncoding?: 'REST' | 'KVP' | 'RESTful';
     tileMatrixLabels?: Array<string | number>;
     googleMapsCompatible?: boolean;
+    useGetCapabilities?: boolean;           // if true, make a GetCapabilities request to fill missing params
     extraParams?: Record<string, string | number | boolean>;
     baseQuery?: string;
     crossOrigin?: boolean | '' | 'anonymous' | 'use-credentials';

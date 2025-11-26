@@ -6,12 +6,12 @@ export class WMTS extends L.TileLayer {
 
     const {
       layer, tileMatrixSet, style = "default", format = "image/png",
-      time, tileMatrixLabels, googleMapsCompatible = true,
+      time, tileMatrixLabels, googleMapsCompatible = true, useGetCapabilities = false,
       extraParams, baseQuery, crossOrigin, requestEncoding, ...tileLayerOpts
     } = options;
 
     if (!layer) throw new Error("WMTS: 'layer' is required.");
-    if (!tileMatrixSet) throw new Error("WMTS: 'tileMatrixSet' is required.");
+    if (!tileMatrixSet && !useGetCapabilities) throw new Error("WMTS: Either 'tileMatrixSet' or 'useGetCapabilities' is required.");
 
     L.setOptions(this, tileLayerOpts);
 
@@ -36,9 +36,9 @@ export class WMTS extends L.TileLayer {
       REQUEST: "GetTile",
       VERSION: "1.0.0",
       LAYER: String(layer),
-      STYLE: String(style),
-      TILEMATRIXSET: String(tileMatrixSet),
-      FORMAT: String(format),
+      STYLE: style ? String(style) : undefined,
+      TILEMATRIXSET: tileMatrixSet ? String(tileMatrixSet) : undefined,
+      FORMAT: format ? String(format) : undefined,
       WIDTH: String(size.x),
       HEIGHT: String(size.y)
     };
@@ -51,13 +51,20 @@ export class WMTS extends L.TileLayer {
 
     this._rest = {
       layer: String(layer),
-      style: String(style),
+      style: style ? String(style) : undefined,
       time: time ? String(time) : undefined,
-      tileMatrixSet: String(tileMatrixSet)
+      tileMatrixSet: tileMatrixSet ? String(tileMatrixSet) : undefined
     };
 
     if (crossOrigin !== undefined) {
       this.options.crossOrigin = crossOrigin === true ? "" : crossOrigin;
+    }
+
+    // If requested, load capabilities to fill in missing info.
+    this._useGetCapabilities = useGetCapabilities;
+    if (useGetCapabilities) {
+      this._capabilitiesLoaded = false;
+      this._loadCapabilities();
     }
   }
 
@@ -70,6 +77,11 @@ export class WMTS extends L.TileLayer {
   }
 
   getTileUrl(coords) {
+    if (this._useGetCapabilities && !this._capabilitiesLoaded) {
+      // Capabilities not yet loaded; return a blank tile URL.
+      return L.Util.emptyImageUrl;
+    }
+
     const z = this._tileZoom;
     const matrix = this._labels && this._labels[z] !== undefined ? this._labels[z] : z;
 
@@ -139,6 +151,15 @@ export class WMTS extends L.TileLayer {
       }
     }
 
+    if (params.useGetCapabilities !== undefined && params.useGetCapabilities !== this._useGetCapabilities) {
+      this._useGetCapabilities = params.useGetCapabilities;
+      this._capabilitiesLoaded = false;
+      // If requested, load capabilities to fill in missing info.
+      if (this._useGetCapabilities) {
+        this._loadCapabilities();
+      }
+    }
+
     if (params.baseQuery !== undefined) {
       const sep = this._url.includes("?") ? "&" : "?";
       this._baseUrl = `${this._url}${sep}${params.baseQuery ?? ""}`;
@@ -146,6 +167,75 @@ export class WMTS extends L.TileLayer {
 
     if (!noRedraw) this.redraw();
     return this;
+  }
+
+  /**
+   * Load WMTS GetCapabilities document and extract TileMatrixSet info.
+   */
+  async _loadCapabilities() {
+    // Fetch GetCapabilities document
+    const capabilitiesUrl = this._baseUrl + L.Util.getParamString({
+      SERVICE: "WMTS",
+      REQUEST: "GetCapabilities",
+      VERSION: "1.0.0"
+    });
+
+    const response = await fetch(capabilitiesUrl);
+    if (!response.ok) {
+      throw new Error(`WMTS: Failed to load WMTS capabilities: ${response.statusText}`);
+    }
+    const text = await response.text();
+    const doc = new DOMParser().parseFromString(text, "application/xml");
+
+    // Extract TileMatrixSet info
+    // The labels for all TileMatrixSets
+    const tileMatrixSetsLabels = Object.fromEntries(
+      Array.from(doc.querySelectorAll("Contents > TileMatrixSet"))
+        .map(tileMatrixSet => [
+          tileMatrixSet.querySelector("Identifier")?.textContent,
+          Array.from(tileMatrixSet.querySelectorAll("TileMatrix > Identifier"))
+            .map(tileMatrix => tileMatrix?.textContent)
+        ]));
+    // Find which TileMatrixSet is used by our layer
+    const layers = Object.fromEntries(
+    Array.from(doc.querySelectorAll("Contents > Layer"))
+      .map(layer => [
+        layer.querySelector("Identifier")?.textContent,
+        {
+          tileMatrixSet: layer.querySelector("TileMatrixSetLink > TileMatrixSet")?.textContent,
+          defaultStyle: layer.querySelector("Style[isDefault='true'] > Identifier")?.textContent ?? layer.querySelector("Style > Identifier")?.textContent,
+          formats: Array.from(layer.querySelectorAll("Format")).map(format => format.textContent),
+          // If we wanted, we could extract more info here (e.g. min and max row and col for
+          // each tile matrix)
+        }
+      ]));
+    const layer = layers[this._wmtsParams.LAYER];
+    const tileMatrixLabels = tileMatrixSetsLabels[this._wmtsParams.TILEMATRIXSET ?? layer.tileMatrixSet]; // The labels for the set used by our layer
+
+    // Only set params that were not explicitly provided.
+    // We make the assumption that even if the user explicitly provided "default" for
+    // style, they probably want whatever the server labels as the default style for
+    // that layer.
+    if (this._wmtsParams.STYLE === "default") {
+      this._wmtsParams.STYLE = String(layer.defaultStyle);
+      this._rest.style = String(layer.defaultStyle);
+    }
+    if (!this._wmtsParams.TILEMATRIXSET) {
+      this._wmtsParams.TILEMATRIXSET = String(layer.tileMatrixSet);
+      this._rest.tileMatrixSet = String(layer.tileMatrixSet);
+    }
+    // User could have explicitly provided format as image/png, so this is a hack to
+    // only override if it's not supported.
+    if (this._wmtsParams.FORMAT === "image/png" && !layer.formats.includes("image/png")) {
+      this._wmtsParams.FORMAT = String(layer.formats[0]);
+    }
+    if (!this._labels) {
+      this._labels = tileMatrixLabels;
+    }
+
+    // Finish
+    this._capabilitiesLoaded = true;
+    this.redraw();
   }
 }
 

@@ -107,6 +107,7 @@ A prebuilt UMD bundle is available under `dist/`.
 | `extraParams` | `Record<string, any>` | `{}` | Extra query params (e.g., token) |
 | `crossOrigin` | `string\|true` | `undefined` | Sets `crossorigin` on tile images |
 | `baseQuery` | `string` | `undefined` | Appended before WMTS KVPs |
+| `useGetCapabilities` | `boolean` | `false` | Use server GetCapabilities to auto-configure |
 
 ---
 
